@@ -9,7 +9,7 @@ interface BookService
     /**
      * @param string $uuid
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function fetchOne(string $uuid);
 
@@ -22,7 +22,7 @@ interface BookService
     /**
      * @param RequestContract $request
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function create(RequestContract $request);
 
@@ -30,7 +30,7 @@ interface BookService
      * @param string $uuid
      * @param RequestContract $request
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function update(string $uuid, RequestContract $request);
 
