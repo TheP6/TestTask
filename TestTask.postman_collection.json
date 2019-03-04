@@ -1,0 +1,336 @@
+{
+	"info": {
+		"_postman_id": "d0ae13e5-08ea-4695-919c-45f541a53de9",
+		"name": "TestTask",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/books?filters[author][surname]=Peter&filters[publisher]=Well&title=Amazing&genres[]=fantasy&genres[]=sci-fi",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "filters[author][name]",
+							"value": "Ja",
+							"disabled": true
+						},
+						{
+							"key": "filters[author][surname]",
+							"value": "Peter"
+						},
+						{
+							"key": "filters[publisher]",
+							"value": "Well"
+						},
+						{
+							"key": "title",
+							"value": "Amazing"
+						},
+						{
+							"key": "genres[]",
+							"value": "fantasy"
+						},
+						{
+							"key": "genres[]",
+							"value": "sci-fi"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetchOne",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/books/{{uuid}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"books",
+						"{{uuid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create with relation uuids",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d936677b-0350-4e1f-b9d0-b759daf361a5",
+						"exec": [
+							"pm.environment.unset(\"uuid\");",
+							"",
+							"var response = pm.response.json();",
+							"",
+							"pm.test(\"CREATE book: status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('CREATE book: check uuid', function () {",
+							"    pm.expect(response).to.have.property('uuid');",
+							"});",
+							"",
+							"pm.environment.set(\"uuid\", response.uuid);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Amazing wizard and amazing generic artifact",
+							"type": "text"
+						},
+						{
+							"key": "author[name]",
+							"value": "Peter",
+							"type": "text"
+						},
+						{
+							"key": "author[surname]",
+							"value": "Jackson",
+							"type": "text"
+						},
+						{
+							"key": "publisher",
+							"value": "SomeGenericPublisher",
+							"type": "text"
+						},
+						{
+							"key": "genre",
+							"value": "fantasy",
+							"type": "text"
+						},
+						{
+							"key": "wordCount",
+							"value": "300000",
+							"type": "text"
+						},
+						{
+							"key": "firstPublished",
+							"value": "2013",
+							"type": "text"
+						},
+						{
+							"key": "averagePrice",
+							"value": "5",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/books",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create book and create relations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f285a14f-cd68-4f40-8d85-d5730c305610",
+						"exec": [
+							"pm.environment.unset(\"uuid\");",
+							"",
+							"var response = pm.response.json();",
+							"",
+							"pm.test(\"CREATE book: status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('CREATE book: check uuid', function () {",
+							"    pm.expect(response).to.have.property('uuid');",
+							"});",
+							"",
+							"pm.environment.set(\"uuid\", response.uuid);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Amazing wizard and amazing generic artifact",
+							"type": "text"
+						},
+						{
+							"key": "author[name]",
+							"value": "Peter",
+							"type": "text"
+						},
+						{
+							"key": "author[surname]",
+							"value": "Jackson",
+							"type": "text"
+						},
+						{
+							"key": "publisher",
+							"value": "SomeGenericPublisher",
+							"type": "text"
+						},
+						{
+							"key": "genre",
+							"value": "fantasy",
+							"type": "text"
+						},
+						{
+							"key": "wordCount",
+							"value": "300000",
+							"type": "text"
+						},
+						{
+							"key": "firstPublished",
+							"value": "2013",
+							"type": "text"
+						},
+						{
+							"key": "averagePrice",
+							"value": "5",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/books",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/books/{{uuid}}?author[name]=Jack&author[surname]=Peterson&publisher=WellFoundedPublisher&genre=fantasy&wordCount=300200&firstPublished=2015&averagePrice=7",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"books",
+						"{{uuid}}"
+					],
+					"query": [
+						{
+							"key": "author[name]",
+							"value": "Jack"
+						},
+						{
+							"key": "author[surname]",
+							"value": "Peterson"
+						},
+						{
+							"key": "publisher",
+							"value": "WellFoundedPublisher"
+						},
+						{
+							"key": "genre",
+							"value": "fantasy"
+						},
+						{
+							"key": "wordCount",
+							"value": "300200"
+						},
+						{
+							"key": "firstPublished",
+							"value": "2015"
+						},
+						{
+							"key": "averagePrice",
+							"value": "7"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/books/{{uuid}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"books",
+						"{{uuid}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
