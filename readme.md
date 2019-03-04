@@ -26,3 +26,6 @@
  
 ## Notes
 - I didn't write automated tests;
+- Project is done using Laravel framework;
+- Main code is in **domain** directory;
+- I tried to make business logic indepdent of third-party libraries and frameworks as much as possible
