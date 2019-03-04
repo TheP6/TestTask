@@ -51,7 +51,7 @@ class BookController extends BaseController {
      */
     public function store(Request $request)
     {
-        $book = $books = $this->bookService->create(
+        $book = $this->bookService->create(
             $this->wrapRequest($request)
         );
 
@@ -81,7 +81,9 @@ class BookController extends BaseController {
     {
         $this->bookService->delete($uuid);
 
-        return response()->json();
+        return response()->json([
+            'message' => 'Book deleted',
+        ]);
     }
 
     /**
