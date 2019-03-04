@@ -10,7 +10,7 @@ namespace Domain\Frameworks\Laravel\Services\Validation;
 
 
 use Illuminate\Support\Facades\Validator as ValidatorFacade;
-use Domain\Layers\Services\Request\Contracts\Validator;
+use Domain\Layers\Services\Validation\Contracts\Validator;
 
 class ValidationAdapter implements Validator
 {

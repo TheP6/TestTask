@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\Layers\Services\Request\Contracts;
+namespace Domain\Layers\Services\Validation\Contracts;
 
 //isolation from third-party libraries
 interface Validator
