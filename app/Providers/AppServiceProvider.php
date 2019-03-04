@@ -10,17 +10,19 @@ use Domain\Layers\Data\Contracts\Repositories\PublisherRepository as PublisherRe
 use Domain\Layers\Data\Contracts\Repositories\GenreRepository as GenreRepositoryContract;
 use Domain\Layers\Data\Contracts\Repositories\AuthorRepository as AuthorRepositoryContract;
 
+use Domain\Layers\Services\Business\Contracts\BaseService as BaseServiceContract;
 use Domain\Layers\Services\Business\Contracts\BookService as BookServiceContract;
 
 use Domain\Layers\Services\Validation\Contracts\Validator as ValidatorContract;
 
 //classes
 use Domain\Frameworks\Laravel\Data\Repositories\BookRepository;
-use Domain\Frameworks\Laravel\Data\Repositories\PublisherRepository as PublisherRepository;
-use Domain\Frameworks\Laravel\Data\Repositories\GenreRepository as GenreRepository;
-use Domain\Frameworks\Laravel\Data\Repositories\AuthorRepository as AuthorRepository;
+use Domain\Frameworks\Laravel\Data\Repositories\PublisherRepository;
+use Domain\Frameworks\Laravel\Data\Repositories\GenreRepository;
+use Domain\Frameworks\Laravel\Data\Repositories\AuthorRepository;
 
-use Domain\Layers\Services\Business\Contracts\BookService as BookService;
+use Domain\Layers\Services\Business\BookService;
+use Domain\Frameworks\Laravel\Services\Business\BaseBusinessService as BaseService;
 
 use Domain\Frameworks\Laravel\Services\Validation\ValidationAdapter as Validator;
 
@@ -37,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         AuthorRepositoryContract::class => AuthorRepository::class,
 
         //services
+        BaseServiceContract::class => BaseService::class,
         BookServiceContract::class => BookService::class,
     ];
 
