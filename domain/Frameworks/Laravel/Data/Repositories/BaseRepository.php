@@ -23,7 +23,7 @@ abstract class BaseRepository
         }
 
         if ($onlyIfNew)  {
-            if ($entity->exists) {
+            if (!$entity->exists) {
                 return $entity->save();
             }
             return $entity;
