@@ -62,21 +62,29 @@ class BookRepository extends BaseRepository implements BookRepositoryContract
         }
 
         if (!empty($filters['author']) && is_array($filters['author'])) {
-            if (!empty($filters['author']['surname']) && !empty($filters['author']['name'])) {
+            if (!empty($filters['author']['surname']) || !empty($filters['author']['name'])) {
                 $query->join('authors', function ($join) use ($filters) {
                     $join->on('books.authorUuid', '=', 'authors.uuid');
 
                     if (!empty($filters['author']['surname'])) {
-                        $join->where('authors.surname', '=', $filters['author']['surname']);
+                        $join->where('authors.surname', 'like', "{$filters['author']['surname']}%");
                     }
 
                     if (!empty($filters['author']['name'])) {
-                        $join->where('authors.name', '=', $filters['author']['name']);
+                        $join->where('authors.name', 'like', "{$filters['author']['name']}%");
                     }
 
                 });
             }
         }
+
+        if (!empty($filters['publisher'])) {
+            $query->join('publishers', function ($join) use ($filters) {
+                $join->on('books.publisherUuid', '=', 'publishers.uuid')
+                    ->where('publishers.name', 'like', "{$filters['publisher']}%");
+            });
+        }
+
 
         if (!empty($filters['title'])) {
             $title = (string)$filters['title'];
