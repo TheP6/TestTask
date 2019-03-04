@@ -17,6 +17,7 @@ class CreateBooksTable extends Migration
             $table->string('uuid', 255);
             $table->string('authorUuid', 255);
             $table->string('publisherUuid', 255);
+            $table->string('genreUuid', 255);
             $table->string('title', 255);
             $table->unsignedInteger('firstPublished');
             $table->unsignedBigInteger('wordCount');
@@ -27,6 +28,7 @@ class CreateBooksTable extends Migration
 
             $table->foreign('authorUuid')->references('uuid')->on('authors');
             $table->foreign('publisherUuid')->references('uuid')->on('publishers');
+            $table->foreign('genreUuid')->references('uuid')->on('genres');
         });
     }
 
