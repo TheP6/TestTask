@@ -10,4 +10,5 @@ namespace Domain\Layers\Data\Contracts\Repositories;
 
 interface PublisherRepository extends BaseRepository
 {
+    public function getByName(string $name);
 }

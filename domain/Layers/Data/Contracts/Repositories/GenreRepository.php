@@ -11,4 +11,6 @@ namespace Domain\Layers\Data\Contracts\Repositories;
 interface GenreRepository extends BaseRepository
 {
     public function getByNames(array $genreNames);
+
+    public function getByName(string $genreName);
 }

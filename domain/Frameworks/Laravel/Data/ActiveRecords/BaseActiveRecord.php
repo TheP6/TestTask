@@ -9,6 +9,10 @@ abstract class BaseActiveRecord extends Model
 {
     protected $primaryKey = 'uuid';
 
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     public function setUuid()
     {
         if (empty($this->{$this->primaryKey})) {
@@ -16,7 +20,7 @@ abstract class BaseActiveRecord extends Model
         }
     }
 
-    public function isNew(): bool
+    public function isEmpty(): bool
     {
         return empty($this->{$this->primaryKey});
     }
