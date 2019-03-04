@@ -30,7 +30,13 @@ class BookController extends BaseController {
             $this->wrapRequest($request)
         );
 
-        return response()->json($books);
+
+        $booksArray = [];
+        foreach ($books as $book) {
+            $booksArray[] = $this->apifyBook($book);
+        }
+
+        return response()->json($booksArray);
     }
 
     /**
@@ -55,7 +61,7 @@ class BookController extends BaseController {
             $this->wrapRequest($request)
         );
 
-        return response()->json($book);
+        return response()->json($this->apifyBook($book));
     }
 
     /**
@@ -70,7 +76,7 @@ class BookController extends BaseController {
             $this->wrapRequest($request)
         );
 
-        return response()->json($book);
+        return response()->json($this->apifyBook($book));
     }
 
     /**
@@ -93,5 +99,19 @@ class BookController extends BaseController {
     protected function wrapRequest(Request $request)
     {
         return new DomainRequest($request);
+    }
+
+    //todo: move transformation to api-resource @ap
+    protected function apifyBook($book)
+    {
+        $tmp = [];
+        $tmp['uuid'] = $book->uuid;
+        $tmp['title'] = $book->title;
+        $tmp['publisher'] = $book->publisher->name;
+        $tmp['author'] = $book->author->name." ".$book->author->surname;
+        $tmp['genre'] = $book->genre->name;
+        $tmp['firstPublished'] = $book->firstPublished;
+        $tmp['averagePrice'] = $book->averagePrice;
+        return $tmp;
     }
 }
