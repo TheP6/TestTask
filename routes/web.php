@@ -13,6 +13,6 @@
 
 Route::get('books', 'BookController@index');
 Route::get('books/{uuid}', 'BookController@show');
-Route::post('books/{uuid}', 'BookController@store');
+Route::post('books', 'BookController@store');
 Route::put('books/{uuid}', 'BookController@update');
 Route::delete('books/{uuid}', 'BookController@destroy');
