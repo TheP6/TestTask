@@ -10,7 +10,7 @@ namespace Domain\Frameworks\Laravel\Data\Repositories;
 
 use Domain\Frameworks\Laravel\Data\ActiveRecords\Book;
 use Domain\Layers\Data\Contracts\Repositories\BookRepository as BookRepositoryContract;
-use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as ModelQueryBuilder;
 
 class BookRepository extends BaseRepository implements BookRepositoryContract
 {
@@ -51,7 +51,7 @@ class BookRepository extends BaseRepository implements BookRepositoryContract
         return $query;
     }
 
-    protected function applyFilters(QueryBuilder $query, array $filters)
+    protected function applyFilters(ModelQueryBuilder $query, array $filters)
     {
         //todo: remove hardcoded table names @ap
         if (!empty($filters['genres'])) {
