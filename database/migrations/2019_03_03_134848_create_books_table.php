@@ -15,9 +15,9 @@ class CreateBooksTable extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->string('uuid', 255);
-            $table->string('authorUuid', 255);
-            $table->string('publisherUuid', 255);
-            $table->string('genreUuid', 255);
+            $table->string('authorUuid', 255)->nullable();
+            $table->string('publisherUuid', 255)->nullable();
+            $table->string('genreUuid', 255)->nullable();
             $table->string('title', 255);
             $table->unsignedInteger('firstPublished');
             $table->unsignedBigInteger('wordCount');
