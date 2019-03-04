@@ -1,11 +1,13 @@
 <?php
 
+namespace Domain\Layers\Services\Business;
+
 use Domain\Layers\Services\Business\Contracts\BookService as BookServiceContract;
 
 use Domain\Layers\Services\Business\Contracts\BaseService as BaseServiceContract;
 
 use Domain\Layers\Services\Request\Contracts\Request as RequestContract;
-use Domain\Layers\Services\Request\Contracts\Validator as ValidatorContract;
+use Domain\Layers\Services\Validation\Contracts\Validator as ValidatorContract;
 
 use Domain\Layers\Data\Contracts\Repositories\BookRepository as BookRepositoryContract;
 use Domain\Layers\Data\Contracts\Repositories\PublisherRepository as PublisherRepositoryContract;
@@ -46,7 +48,7 @@ class BookService implements BookServiceContract
     /**
      * @param string $uuid
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function fetchOne(string $uuid)
     {
@@ -60,7 +62,7 @@ class BookService implements BookServiceContract
      */
     public function search(RequestContract $request)
     {
-        $input = $request->get();
+        $input = $request->all();
         $this->validator->validate([
             'filters' => 'array',
             'filters.genres' => 'array',
@@ -73,7 +75,7 @@ class BookService implements BookServiceContract
 
         return $this->bookRepository->getByFilters(
             $input['filters'] ?? [],
-            $input['limit'],
+            $input['limit'] ?? static::MAX_LIMIT,
             $input['offset'] ?? 0
         );
     }
@@ -81,11 +83,12 @@ class BookService implements BookServiceContract
     /**
      * @param RequestContract $request
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function create(RequestContract $request)
     {
-        $input = $request->get();
+        $input = $request->all();
+
         $this->validator->validate([
             'title' => 'required|string|min:2',
             'averagePrice' => 'required|numeric',
@@ -103,7 +106,7 @@ class BookService implements BookServiceContract
         $newBook = $this->bookRepository->makeNewEntity();
         $newBook->title = $input['title'];
         $newBook->authorUuid = $author->uuid;
-        $newBook->publiserUuid = $publisher->uuid;
+        $newBook->publisherUuid = $publisher->uuid;
         $newBook->genreUuid = $genre->uuid;
         $newBook->firstPublished = $input['firstPublished'];
         $newBook->wordCount = $input['wordCount'];
@@ -117,13 +120,13 @@ class BookService implements BookServiceContract
      * @param string $uuid
      * @param RequestContract $request
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function update(string $uuid, RequestContract $request)
     {
         $book = $this->bookRepository->getByUuidOrFail($uuid); //I should make more clear that method throws exception if entity is not found
 
-        $input = $request->get();
+        $input = $request->all();
         $this->validator->validate([
             'title' => 'string|min:2',
             'averagePrice' => 'numeric',
@@ -139,7 +142,7 @@ class BookService implements BookServiceContract
 
         $book->title = $input['title'] ?? $book->title;
         $book->authorUuid = $author->uuid ?? $book->authorUuid;
-        $book->publiserUuid = $publisher->uuid ?? $book->publiserUuid;
+        $book->publisherUuid = $publisher->uuid ?? $book->publisherUuid;
         $book->genreUuid = $genre->uuid ?? $book->genreUuid;
         $book->firstPublished = $input['firstPublished'] ?? $book->firstPublished;
         $book->wordCount = $input['wordCount'] ?? $book->wordCount;
@@ -151,14 +154,15 @@ class BookService implements BookServiceContract
 
     /**
      * @param string $uuid
+     * @throws \Exception
      */
     public function delete(string $uuid)
     {
-        $book = $this->bookRepository->getByUuid($uuid);
+        $book = $this->bookRepository->getByUuidOrFail($uuid);
         $this->bookRepository->delete($book);
     }
 
-    protected function saveAll($newBook, $genre, $publisher, $author)
+    protected function saveAll($book, $genre, $publisher, $author)
     {
         $this->baseService->dbBeginTransaction();
 
@@ -168,7 +172,8 @@ class BookService implements BookServiceContract
             $this->publisherRepository->persist($publisher, true);
             $this->genreRepository->persist($genre, true);
             $this->authorRepository->persist($author, true);
-            $this->bookRepository->persist($newBook);
+
+            $this->bookRepository->persist($book);
 
         } catch (\Exception $e) {
             $this->baseService->dbRollback();
@@ -186,7 +191,6 @@ class BookService implements BookServiceContract
         }
 
         $genre = $this->genreRepository->getByName($genreName);
-
         if (is_null($genre)) {
             $this->validator->validate([
                 'name' => 'min:2',
@@ -211,10 +215,12 @@ class BookService implements BookServiceContract
         if (is_null($publisher)) {
             $this->validator->validate([
                 'name' => 'min:2',
-            ], [ 'name' => $publisher ]);
+            ], [
+                'name' => $publisherName
+            ]);
 
             $publisher = $this->publisherRepository->makeNewEntity();
-            $publisher->name = $publisher;
+            $publisher->name = $publisherName;
             return $publisher;
         }
 
@@ -237,7 +243,7 @@ class BookService implements BookServiceContract
             'surname' => 'min:2',
         ], $authorUuidOrData);
 
-        $author = $this->genreRepository->makeNewEntity();
+        $author = $this->authorRepository->makeNewEntity();
         $author->name = $authorUuidOrData['name'];
         $author->surname = $authorUuidOrData['surname'];
 
